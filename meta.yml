@@ -1,0 +1,9 @@
+Name: Rex::Module::Development::Ant
+Description: Apache Ant module, to install and execute Ant instructions
+Author: Paulo Graça <paulo.graca@fccn.pt>
+License: GPLv3
+
+# Depends on Java from rex recipies
+#Require:
+#   - Rex::Lang::Java
+
