@@ -21,7 +21,8 @@ our $__program_name = {
 };
 
 task setup => sub {
-	pkg "ant", ensure    => "latest";
+	pkg param_lookup ("package_name", case ( lc(operating_system()), $__package_name )),
+		ensure    => "latest";
 };
 
 
