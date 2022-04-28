@@ -3,31 +3,42 @@ package Rex::Module::Development::Ant;
 use Rex -base;
 use Data::Dumper;
 
-my %ANT_CONF = ();
+our $__ant_opts = '-Xmx512M -Xms64M -Dfile.encoding=UTF-8';
+our $__ant_cwd = '/';
 
-Rex::Config->register_set_handler("ant" => sub {
-	my ($name, $value) = @_;
-	$ANT_CONF{$name} = $value;
-});
+our $__package_name = {
+	debian => "ant",
+	ubuntu => "ant",
+	centos => "ant",
+	mageia => "ant",
+};
 
-
-set ant => cwd => "/";
-set ant => ANT_OPTS => "-Xmx512M -Xms64M -Dfile.encoding=UTF-8";
-set ant => source => "https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar";
-
+our $__program_name = {
+	debian => "ant",
+	ubuntu => "ant",
+	centos => "ant",
+	mageia => "ant",
+};
 
 task setup => sub {
 	pkg "ant", ensure    => "latest";
 };
 
-task ant => sub {
-	my $command = shift;
-	my $base_dir = $ANT_CONF{cwd};
 
-	run "ant " . $command,
+sub ant {
+	my $command = shift;
+
+	my $base_dir = param_lookup ("cwd", $__ant_cwd );
+
+	Rex::Logger::info("Running ant $command (this action may take some time)");
+	run param_lookup ("package_name", case ( lc(operating_system()), $__program_name ))." $command",
 		cwd => $base_dir,
+		continuous_read => sub {
+			#output to log
+			Rex::Logger::info(@_);
+		},
 		env => {
-			ANT_OPTS => $ANT_CONF{ANT_OPTS},
+			ANT_OPTS => param_lookup ("opts", $__ant_opts ),
 		};
 	die("Error running ant command.") unless ($? == 0);
 };
