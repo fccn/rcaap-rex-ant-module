@@ -20,6 +20,13 @@ our $__program_name = {
 	mageia => "ant",
 };
 
+our $__ant_home = {
+	debian => "/usr/share/ant",
+	ubuntu => "/usr/share/ant",
+	centos => "/usr/share/ant",
+	mageia => "/usr/share/ant",
+};
+
 task setup => sub {
 	pkg param_lookup ("package_name", case ( lc(operating_system()), $__package_name )),
 		ensure    => "latest";
@@ -39,6 +46,7 @@ sub ant {
 			Rex::Logger::info(@_);
 		},
 		env => {
+			ANT_HOME => param_lookup ("home", case ( lc(operating_system()), $__ant_home ) ),
 			ANT_OPTS => param_lookup ("opts", $__ant_opts ),
 		};
 	die("Error running ant command.") unless ($? == 0);
