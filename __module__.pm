@@ -32,7 +32,7 @@ sub ant {
 	my $base_dir = param_lookup ("cwd", $__ant_cwd );
 
 	Rex::Logger::info("Running ant $command (this action may take some time)");
-	run param_lookup ("package_name", case ( lc(operating_system()), $__program_name ))." $command",
+	run param_lookup ("program_name", case ( lc(operating_system()), $__program_name ))." $command",
 		cwd => $base_dir,
 		continuous_read => sub {
 			#output to log
