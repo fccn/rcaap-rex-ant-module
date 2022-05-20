@@ -35,8 +35,10 @@ task setup => sub {
 
 sub ant {
 	my $command = shift;
+	my (%options) = @_;
+	my $options = {%options};
 
-	my $base_dir = param_lookup ("cwd", $__ant_cwd );
+	my $base_dir = (defined($options->{'cwd'})) ? $options->{'cwd'} : param_lookup ("cwd", $__ant_cwd );
 
 	Rex::Logger::info("Running ant $command (this action may take some time)");
 	run param_lookup ("program_name", case ( lc(operating_system()), $__program_name ))." $command",
